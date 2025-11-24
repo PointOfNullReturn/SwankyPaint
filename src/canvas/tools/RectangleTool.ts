@@ -4,6 +4,7 @@ import { drawLine } from './drawHelpers'
 import { executeCommand, nextCommandId } from '../../state/commands/Command'
 import type { Command } from '../../state/commands/Command'
 import { getPointerColor } from './colorSelection'
+import { withOverlayRenderer } from '../../rendering/overlayManager'
 
 class RectangleCommand implements Command {
   readonly id: string
@@ -76,9 +77,17 @@ export class RectangleTool implements Tool {
   onPointerDown(state: EditorStoreState, x: number, y: number, evt: PointerEvent): void {
     this.start = [x, y]
     this.drawValue = getPointerColor(state, evt)
+    withOverlayRenderer((overlay) => overlay.drawRect(x, y, 1, 1))
   }
 
-  onPointerMove(_state: EditorStoreState, _x: number, _y: number, _evt: PointerEvent): void {}
+  onPointerMove(_state: EditorStoreState, x: number, y: number, _evt: PointerEvent): void {
+    if (!this.start) return
+    const minX = Math.min(this.start[0], x)
+    const minY = Math.min(this.start[1], y)
+    const width = Math.abs(this.start[0] - x) + 1
+    const height = Math.abs(this.start[1] - y) + 1
+    withOverlayRenderer((overlay) => overlay.drawRect(minX, minY, width, height))
+  }
 
   onPointerUp(state: EditorStoreState, x: number, y: number, _evt: PointerEvent): void {
     if (!this.start) return
@@ -91,6 +100,12 @@ export class RectangleTool implements Tool {
     )
     command.do(state)
     executeCommand(command, { skipDo: true })
+    withOverlayRenderer((overlay) => overlay.clear())
     this.start = null
+  }
+
+  onCancel(): void {
+    this.start = null
+    withOverlayRenderer((overlay) => overlay.clear())
   }
 }

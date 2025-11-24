@@ -21,6 +21,10 @@ export class OverlayRenderer {
     this.context = context
     this.zoom = zoom
     this.view = view
+    this.applyStyle()
+  }
+
+  private applyStyle(): void {
     this.context.strokeStyle = 'rgba(255, 255, 255, 0.9)'
     this.context.lineWidth = 1
   }
@@ -41,6 +45,7 @@ export class OverlayRenderer {
     this.clear()
     this.context.save()
     this.context.translate(-this.view.offsetX * this.zoom, -this.view.offsetY * this.zoom)
+    this.applyStyle()
     this.context.beginPath()
     this.context.moveTo(startX * this.zoom, startY * this.zoom)
     this.context.lineTo(endX * this.zoom, endY * this.zoom)
@@ -52,6 +57,7 @@ export class OverlayRenderer {
     this.clear()
     this.context.save()
     this.context.translate(-this.view.offsetX * this.zoom, -this.view.offsetY * this.zoom)
+    this.applyStyle()
     this.context.strokeRect(x * this.zoom, y * this.zoom, width * this.zoom, height * this.zoom)
     this.context.restore()
   }

@@ -4,6 +4,7 @@ import { drawLine } from './drawHelpers'
 import { executeCommand, nextCommandId } from '../../state/commands/Command'
 import type { Command } from '../../state/commands/Command'
 import { getPointerColor } from './colorSelection'
+import { withOverlayRenderer } from '../../rendering/overlayManager'
 
 class LineCommand implements Command {
   readonly id: string
@@ -58,15 +59,29 @@ export class LineTool implements Tool {
   onPointerDown(state: EditorStoreState, x: number, y: number, evt: PointerEvent): void {
     this.start = [x, y]
     this.drawValue = getPointerColor(state, evt)
+    withOverlayRenderer((overlay) => {
+      overlay.drawLine(x, y, x, y)
+    })
   }
 
-  onPointerMove(_state: EditorStoreState, _x: number, _y: number, _evt: PointerEvent): void {}
+  onPointerMove(_state: EditorStoreState, x: number, y: number, _evt: PointerEvent): void {
+    if (!this.start) return
+    withOverlayRenderer((overlay) => {
+      overlay.drawLine(this.start![0], this.start![1], x, y)
+    })
+  }
 
   onPointerUp(state: EditorStoreState, x: number, y: number, _evt: PointerEvent): void {
     if (!this.start) return
     const command = new LineCommand(state.document, this.start, [x, y], this.drawValue)
     command.do(state)
     executeCommand(command, { skipDo: true })
+    withOverlayRenderer((overlay) => overlay.clear())
     this.start = null
+  }
+
+  onCancel(): void {
+    this.start = null
+    withOverlayRenderer((overlay) => overlay.clear())
   }
 }
