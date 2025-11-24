@@ -1,0 +1,73 @@
+.app-shell-grid {
+  display: grid;
+  grid-template-areas:
+    'menubar menubar menubar'
+    'toolbar canvas sidebar'
+    'status status status';
+  grid-template-columns: 80px 1fr 360px;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  background: #141416;
+  color: #e7e7ee;
+}
+
+.app-menubar {
+  grid-area: menubar;
+  padding: 0.5rem 1rem;
+  background: #1d1d21;
+}
+
+.app-toolbar {
+  grid-area: toolbar;
+  background: #1b1b1f;
+  border-right: 1px solid #2a2a2f;
+}
+
+.app-canvas-area {
+  grid-area: canvas;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f12;
+  overflow: auto;
+}
+
+.app-sidebar {
+  grid-area: sidebar;
+  padding: 1rem;
+  border-left: 1px solid #2a2a2f;
+  background: #18181c;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+.canvas-stack {
+  position: relative;
+}
+
+.canvas-stack canvas {
+  image-rendering: pixelated;
+}
+
+.canvas-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 1280px) {
+  .app-shell-grid {
+    grid-template-columns: 60px 1fr;
+    grid-template-areas:
+      'menubar menubar'
+      'toolbar canvas'
+      'toolbar sidebar'
+      'status status';
+  }
+  .app-sidebar {
+    min-height: 200px;
+  }
+}

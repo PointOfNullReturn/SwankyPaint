@@ -38,4 +38,16 @@ describe('StatusBar', () => {
     expect(screen.getByText('#005')).toBeInTheDocument()
     expect(screen.getByText('#C80A14')).toBeInTheDocument()
   })
+
+  it('displays pointer coordinates and undo/redo states', () => {
+    render(<StatusBar />)
+    act(() => {
+      getState().setPointer({ lastX: 10.4, lastY: 20.6 })
+      getState().pushUndo({ do: () => {}, undo: () => {} })
+    })
+    expect(screen.getByText(/X: 10/i)).toBeInTheDocument()
+    expect(screen.getByText(/Y: 21/i)).toBeInTheDocument()
+    expect(screen.getByText(/Undo/i).parentElement).toHaveTextContent(/Available/)
+    expect(screen.getByText(/Redo/i).parentElement).toHaveTextContent(/None/)
+  })
 })

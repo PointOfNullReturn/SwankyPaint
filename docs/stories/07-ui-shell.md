@@ -1,29 +1,49 @@
 # Epic 07 Stories – UI Shell & Layout
 
-## Story 07.01 – AppShell Layout & Canvas Mount
+## Story 07.01 – AppShell Layout & Canvas Mount _(Status: ✅ Completed)_
 **Goal:** Compose the main layout with menubar, toolbar, canvas region, palette sidebar, and status bar.
 **Acceptance Criteria:**
 - `AppShell.tsx` uses CSS grid/flex to place regions exactly as spec’d; layout reflows at ≥1280px width and prevents overlapping panes.
 - Canvas component mounts base + overlay canvases and subscribes only to needed store slices (document pixels, view state).
 - Layout supports resizing window while keeping toolbar/palette fixed width and canvas filling remainder.
 
-## Story 07.02 – Toolbar Integration
+**Notes:**
+- Added `AppShell` grid layout with dedicated menubar, toolbar, canvas, sidebar, and status sections plus responsive CSS.
+- `EditorCanvas` mounts base/overlay canvases, draws the document buffer to an offscreen canvas, and updates when state changes.
+- App test updated to ensure the new layout renders.
+
+## Story 07.02 – Toolbar Integration _(Status: ✅ Completed)_
 **Goal:** Render interactive tool buttons linked to store state.
 **Acceptance Criteria:**
 - Toolbar shows icons + keyboard shortcuts for Pencil, Eraser, Line, Rectangle, Fill, Picker; active tool highlighted.
 - Buttons dispatch tool-changing actions and respond to keyboard events (Enter/Space) with full accessibility labels.
 - Disabled states ready for future tools (e.g., when import modal open).
 
-## Story 07.03 – Menubar & Dialogs
+**Notes:**
+- Added `Toolbar` component with inline SVG icons, labels, and shortcuts, tied to `tool.activeToolId` with `aria-pressed` states.
+- Buttons call `setTool` and can later honor disabled logic; toolbar styling matches the new layout.
+- Tests ensure clicking a button switches the active tool.
+
+## Story 07.03 – Menubar & Dialogs _(Status: ✅ Completed)_
 **Goal:** Provide File/View/Help menus with functional commands.
 **Acceptance Criteria:**
 - File menu handles New (clear doc), Open (JSON/ILBM), Save (JSON), Export PNG, each hooking into previously implemented commands.
 - View menu toggles grid and adjusts zoom in/out (clamped) reflecting disabled states at min/max zoom.
 - Help menu opens About modal containing version/build info; modal accessible via keyboard.
 
-## Story 07.04 – Status Bar & Live Readouts
+**Notes:**
+- Added `Menubar` component with File/View/Help menus wired to New/Open/Save/Export/zoom/grid actions and ILBM import.
+- Introduced keyboard-dismissable About modal with version info.
+- Tests verify menu interactions and modal rendering.
+
+## Story 07.04 – Status Bar & Live Readouts _(Status: ✅ Completed)_
 **Goal:** Display pointer coordinates plus FG/BG data efficiently.
 **Acceptance Criteria:**
 - Status bar subscribes to pointer + palette slices using optimized selectors to avoid frequent rerenders.
 - Coordinates update on pointer move to show `x,y` (document space) while FG/BG show index + hex value.
 - Undo/redo availability optionally displayed (e.g., greyed-out text) to inform users.
+
+**Notes:**
+- Status bar now derives palette indices/colors, pointer coordinates, and undo/redo availability through isolated selectors using `useShallow`, preventing pointless re-renders.
+- UI shows zero-padded indices plus uppercase hex values, rounded coordinates, and availability chips that swap styles based on each stack.
+- Tests assert palette updates, pointer rounding, and undo/redo readouts to lock the behavior in.

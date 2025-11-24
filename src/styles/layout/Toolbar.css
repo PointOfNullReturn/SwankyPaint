@@ -1,0 +1,41 @@
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.toolbar-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: transparent;
+  border: none;
+  color: #eaeaf2;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.toolbar-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.toolbar-button-label {
+  font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toolbar-button-label small {
+  font-size: 0.65rem;
+  color: #a7a7b5;
+}
+
+.toolbar-button.is-active {
+  background: #2a2a30;
+  border: 1px solid #3f3f46;
+}

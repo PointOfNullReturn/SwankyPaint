@@ -1,0 +1,14 @@
+.menubar {
+  background: #1d1d21;
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.menubar .menu {
+  position: absolute;
+  background: #2a2a2f;
+  list-style: none;
+  padding: 0.5rem;
+  margin: 0;
+}

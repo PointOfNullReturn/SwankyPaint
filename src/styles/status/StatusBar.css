@@ -20,3 +20,11 @@
   letter-spacing: 0.05em;
   color: #c6c6ce;
 }
+
+.status-available {
+  color: #7ef29d;
+}
+
+.status-disabled {
+  color: #80808f;
+}
