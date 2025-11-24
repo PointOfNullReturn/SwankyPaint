@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 
 import { executeCommand, redoLastCommand, undoLastCommand } from '../Command'
 import { ClearDocumentCommand } from '../ClearDocumentCommand'
+import { ImportIFFCommand } from '../ImportIFFCommand'
 import { resetEditorStore, useEditorStore } from '../../store'
 import { PaletteChangeCommand } from '../PaletteChangeCommand'
 
@@ -43,6 +44,31 @@ describe('command execution', () => {
     expect(redone).toBe(command)
     expect(getStore().document.pixels[0]).toBe(0)
     expect(getStore().history.undoStack).toHaveLength(1)
+  })
+})
+
+describe('ImportIFFCommand', () => {
+  it('replaces document and supports undo/redo', () => {
+    const state = getStore()
+    const next = {
+      document: {
+        mode: 'indexed8' as const,
+        width: 4,
+        height: 4,
+        pixels: new Uint8Array(16),
+        palette: state.document.palette.map((c) => ({ ...c })),
+        cycles: [],
+      },
+      view: { ...state.view, zoom: 2 },
+      palette: state.palette,
+    }
+    const command = new ImportIFFCommand(state, next)
+    executeCommand(command)
+    expect(getStore().document.width).toBe(4)
+    undoLastCommand()
+    expect(getStore().document.width).toBe(320)
+    redoLastCommand()
+    expect(getStore().document.width).toBe(4)
   })
 })
 
