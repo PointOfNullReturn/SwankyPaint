@@ -139,9 +139,12 @@ export const PaletteEditor = () => {
                 const defaultHigh = Math.min(1, palette.colors.length - 1)
                 updateCycles([
                   {
-                    rate: currentCycle.rate || defaultRate,
-                    low: currentCycle.low || defaultLow,
-                    high: currentCycle.high || defaultHigh,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    rate: currentCycle?.rate || defaultRate,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    low: currentCycle?.low || defaultLow,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    high: currentCycle?.high || defaultHigh,
                     active: true,
                   },
                 ])
