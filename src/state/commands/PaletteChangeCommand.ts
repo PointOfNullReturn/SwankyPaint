@@ -43,7 +43,10 @@ const applyOperation = (state: EditorStoreState, op: PaletteChangeOperation): vo
   }
 }
 
-const inverseOperation = (palette: PaletteState, op: PaletteChangeOperation): PaletteChangeOperation => {
+const inverseOperation = (
+  palette: PaletteState,
+  op: PaletteChangeOperation,
+): PaletteChangeOperation => {
   switch (op.type) {
     case 'update': {
       const index = clampIndexSafe(op.index, palette.colors.length)
@@ -91,7 +94,9 @@ export class PaletteChangeCommand implements Command {
       }
       return
     }
-    this.operations.forEach((op) => applyOperation(state, op))
+    this.operations.forEach((op) => {
+      applyOperation(state, op)
+    })
   }
 
   undo(state: EditorStoreState): void {

@@ -8,7 +8,7 @@ import { resetEditorStore, useEditorStore } from '../../../state/store'
 import { undoLastCommand } from '../../../state/commands/Command'
 
 const pointerEvent = (button = 0, buttons?: number): PointerEvent =>
-  ({ button, buttons: buttons ?? (button === 2 ? 2 : button === 0 ? 1 : 0) } as PointerEvent)
+  ({ button, buttons: buttons ?? (button === 2 ? 2 : button === 0 ? 1 : 0) }) as PointerEvent
 
 const getIndexedDocument = () => {
   const state = useEditorStore.getState()

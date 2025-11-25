@@ -41,12 +41,13 @@ class LineCommand implements Command {
   }
 
   undo(state: EditorStoreState): void {
-    if (this.isIndexed && this.beforeIndexed) {
-      state.setDocument({ ...state.document, pixels: new Uint8Array(this.beforeIndexed) })
+    const document = state.document
+    if (this.isIndexed && document.mode === 'indexed8' && this.beforeIndexed) {
+      state.setDocument({ ...document, pixels: new Uint8Array(this.beforeIndexed) })
       return
     }
-    if (!this.isIndexed && this.beforeRgba) {
-      state.setDocument({ ...state.document, pixels: new Uint32Array(this.beforeRgba) })
+    if (!this.isIndexed && document.mode === 'rgba32' && this.beforeRgba) {
+      state.setDocument({ ...document, pixels: new Uint32Array(this.beforeRgba) })
     }
   }
 }
@@ -65,23 +66,31 @@ export class LineTool implements Tool {
   }
 
   onPointerMove(_state: EditorStoreState, x: number, y: number, _evt: PointerEvent): void {
+    void _state
+    void _evt
     if (!this.start) return
+    const [startX, startY] = this.start
     withOverlayRenderer((overlay) => {
-      overlay.drawLine(this.start![0], this.start![1], x, y)
+      overlay.drawLine(startX, startY, x, y)
     })
   }
 
   onPointerUp(state: EditorStoreState, x: number, y: number, _evt: PointerEvent): void {
+    void _evt
     if (!this.start) return
     const command = new LineCommand(state.document, this.start, [x, y], this.drawValue)
     command.do(state)
     executeCommand(command, { skipDo: true })
-    withOverlayRenderer((overlay) => overlay.clear())
+    withOverlayRenderer((overlay) => {
+      overlay.clear()
+    })
     this.start = null
   }
 
   onCancel(): void {
     this.start = null
-    withOverlayRenderer((overlay) => overlay.clear())
+    withOverlayRenderer((overlay) => {
+      overlay.clear()
+    })
   }
 }

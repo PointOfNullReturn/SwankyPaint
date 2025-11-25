@@ -14,7 +14,9 @@ export const AboutModal = ({ open, onClose }: AboutModalProps) => {
       }
     }
     window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
+    return () => {
+      window.removeEventListener('keydown', handleKey)
+    }
   }, [open, onClose])
   if (!open) return null
   return (

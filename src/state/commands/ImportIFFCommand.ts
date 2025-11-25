@@ -39,8 +39,11 @@ export class ImportIFFCommand implements Command {
   private readonly afterView: ViewState
   private readonly afterPalette: PaletteState
 
-  constructor(current: EditorStoreState, next: { document: DocumentState; view: ViewState; palette: PaletteState }) {
-    this.id = `import-iff-${Date.now()}`
+  constructor(
+    current: EditorStoreState,
+    next: { document: DocumentState; view: ViewState; palette: PaletteState },
+  ) {
+    this.id = `import-iff-${String(Date.now())}`
     this.createdAt = Date.now()
     this.beforeDocument = cloneDocument(current.document)
     this.beforeView = { ...current.view }
@@ -58,7 +61,12 @@ export class ImportIFFCommand implements Command {
     this.applyState(state, this.beforeDocument, this.beforeView, this.beforePalette)
   }
 
-  private applyState(state: EditorStoreState, document: DocumentState, view: ViewState, palette: PaletteState): void {
+  private applyState(
+    state: EditorStoreState,
+    document: DocumentState,
+    view: ViewState,
+    palette: PaletteState,
+  ): void {
     state.setDocument(cloneDocument(document))
     state.updateView(() => ({ ...view }))
     state.setPaletteColors(palette.colors.map((color) => ({ ...color })))

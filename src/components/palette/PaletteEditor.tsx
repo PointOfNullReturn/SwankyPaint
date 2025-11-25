@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { executeCommand } from '../../state/commands/Command'
-import { PaletteChangeCommand, type PaletteChangeOperation } from '../../state/commands/PaletteChangeCommand'
+import {
+  PaletteChangeCommand,
+  type PaletteChangeOperation,
+} from '../../state/commands/PaletteChangeCommand'
 import { usePalette, useEditorStore } from '../../state/store'
 import type { CRNGRange, PaletteColor } from '../../state/documentTypes'
 
@@ -16,23 +19,29 @@ const MIN_COLORS = 2
 
 const channelLabels: Array<keyof PaletteColor> = ['r', 'g', 'b', 'a']
 
-const createPaletteCommand = (operations: PaletteChangeOperation[], label: string): PaletteChangeCommand =>
-  new PaletteChangeCommand(operations, label)
+const createPaletteCommand = (
+  operations: PaletteChangeOperation[],
+  label: string,
+): PaletteChangeCommand => new PaletteChangeCommand(operations, label)
 
 export const PaletteEditor = () => {
   const palette = usePalette()
-  const [selectedIndex, setSelectedIndex] = useState(palette.foregroundIndex)
+  const [selectedIndexRaw, setSelectedIndexRaw] = useState(palette.foregroundIndex)
   const setForegroundIndex = useEditorStore((state) => state.setForegroundIndex)
 
-  useEffect(() => {
-    setSelectedIndex((index) => Math.min(index, palette.colors.length - 1))
-  }, [palette.colors.length])
+  // Clamp selected index to valid range
+  const selectedIndex = Math.min(selectedIndexRaw, palette.colors.length - 1)
+  const setSelectedIndex = (value: number | ((prev: number) => number)) => {
+    setSelectedIndexRaw(value)
+  }
 
   const selectedColor = palette.colors[selectedIndex] ?? palette.colors[0]
 
   const updateColorChannel = (channel: keyof PaletteColor, value: number) => {
     const color: PaletteColor = { ...selectedColor, [channel]: clampChannel(value) }
-    executeCommand(createPaletteCommand([{ type: 'update', index: selectedIndex, color }], 'Update color'))
+    executeCommand(
+      createPaletteCommand([{ type: 'update', index: selectedIndex, color }], 'Update color'),
+    )
   }
 
   const addColor = () => {
@@ -56,7 +65,7 @@ export const PaletteEditor = () => {
   }
 
   const cycles = palette.cycles ?? []
-  const currentCycle = cycles[0]
+  const currentCycle: CRNGRange | undefined = cycles[0]
 
   const updateCycles = (next: CRNGRange[] | undefined) => {
     executeCommand(createPaletteCommand([{ type: 'setCycles', cycles: next ?? [] }], 'Update CRNG'))
@@ -77,7 +86,7 @@ export const PaletteEditor = () => {
             }}
           >
             {palette.colors.map((_, index) => (
-              <option key={index} value={index}>{`#${index}`}</option>
+              <option key={index} value={index}>{`#${String(index)}`}</option>
             ))}
           </select>
         </label>
@@ -91,31 +100,27 @@ export const PaletteEditor = () => {
               min={0}
               max={255}
               value={selectedColor[channel]}
-              onChange={(event) => updateColorChannel(channel, Number(event.target.value))}
+              onChange={(event) => {
+                updateColorChannel(channel, Number(event.target.value))
+              }}
             />
             <input
               type="number"
               min={0}
               max={255}
               value={selectedColor[channel]}
-              onChange={(event) => updateColorChannel(channel, Number(event.target.value))}
+              onChange={(event) => {
+                updateColorChannel(channel, Number(event.target.value))
+              }}
             />
           </label>
         ))}
       </div>
       <div className="palette-editor-actions">
-        <button
-          type="button"
-          onClick={addColor}
-          disabled={palette.colors.length >= MAX_COLORS}
-        >
+        <button type="button" onClick={addColor} disabled={palette.colors.length >= MAX_COLORS}>
           Add Color
         </button>
-        <button
-          type="button"
-          onClick={removeColor}
-          disabled={palette.colors.length <= MIN_COLORS}
-        >
+        <button type="button" onClick={removeColor} disabled={palette.colors.length <= MIN_COLORS}>
           Remove Color
         </button>
       </div>
@@ -123,16 +128,20 @@ export const PaletteEditor = () => {
         <label>
           <input
             type="checkbox"
-            checked={Boolean(currentCycle?.active)}
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            checked={currentCycle ? currentCycle.active : false}
             onChange={(event) => {
               if (!event.target.checked) {
                 updateCycles([])
               } else {
+                const defaultRate = 1
+                const defaultLow = 0
+                const defaultHigh = Math.min(1, palette.colors.length - 1)
                 updateCycles([
                   {
-                    rate: currentCycle?.rate ?? 1,
-                    low: currentCycle?.low ?? 0,
-                    high: currentCycle?.high ?? Math.min(1, palette.colors.length - 1),
+                    rate: currentCycle.rate || defaultRate,
+                    low: currentCycle.low || defaultLow,
+                    high: currentCycle.high || defaultHigh,
                     active: true,
                   },
                 ])
@@ -141,7 +150,8 @@ export const PaletteEditor = () => {
           />
           Enable CRNG cycle
         </label>
-        {currentCycle ? (
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+        {currentCycle && (
           <div className="cycle-fields">
             <label>
               Rate
@@ -150,9 +160,9 @@ export const PaletteEditor = () => {
                 min={1}
                 max={10}
                 value={currentCycle.rate}
-                onChange={(event) =>
+                onChange={(event) => {
                   updateCycles([{ ...currentCycle, rate: Math.max(1, Number(event.target.value)) }])
-                }
+                }}
               />
             </label>
             <label>
@@ -162,14 +172,17 @@ export const PaletteEditor = () => {
                 min={0}
                 max={palette.colors.length - 1}
                 value={currentCycle.low}
-                onChange={(event) =>
+                onChange={(event) => {
                   updateCycles([
                     {
                       ...currentCycle,
-                      low: Math.max(0, Math.min(Number(event.target.value), palette.colors.length - 1)),
+                      low: Math.max(
+                        0,
+                        Math.min(Number(event.target.value), palette.colors.length - 1),
+                      ),
                     },
                   ])
-                }
+                }}
               />
             </label>
             <label>
@@ -179,18 +192,21 @@ export const PaletteEditor = () => {
                 min={0}
                 max={palette.colors.length - 1}
                 value={currentCycle.high}
-                onChange={(event) =>
+                onChange={(event) => {
                   updateCycles([
                     {
                       ...currentCycle,
-                      high: Math.max(0, Math.min(Number(event.target.value), palette.colors.length - 1)),
+                      high: Math.max(
+                        0,
+                        Math.min(Number(event.target.value), palette.colors.length - 1),
+                      ),
                     },
                   ])
-                }
+                }}
               />
             </label>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   )

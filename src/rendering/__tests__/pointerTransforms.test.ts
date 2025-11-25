@@ -1,8 +1,15 @@
 import { describe, expect, it } from 'vitest'
 
 import { documentToScreen, screenToDocument } from '../pointerTransforms'
+import type { ViewState } from '../../state/documentTypes'
 
-const view = { zoom: 4, offsetX: 10, offsetY: 5, showGrid: false }
+const view: ViewState = {
+  zoom: 4,
+  offsetX: 10,
+  offsetY: 5,
+  showGrid: false,
+  cycleAnimationEnabled: false,
+}
 
 describe('pointer transforms', () => {
   it('converts screen to document coordinates respecting zoom and pan', () => {

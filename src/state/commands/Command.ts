@@ -31,10 +31,11 @@ export const undoLastCommand = (): Command | undefined => {
   if (!command) {
     return undefined
   }
-  command.undo(store)
+  const typedCommand = command as Command
+  typedCommand.undo(store)
   store.setHistory(history)
-  store.pushRedo(command)
-  return command
+  store.pushRedo(typedCommand)
+  return typedCommand
 }
 
 export const redoLastCommand = (): Command | undefined => {
@@ -43,8 +44,9 @@ export const redoLastCommand = (): Command | undefined => {
   if (!command) {
     return undefined
   }
-  command.do(store)
+  const typedCommand = command as Command
+  typedCommand.do(store)
   store.setHistory(history)
-  store.pushUndo(command)
-  return command
+  store.pushUndo(typedCommand)
+  return typedCommand
 }

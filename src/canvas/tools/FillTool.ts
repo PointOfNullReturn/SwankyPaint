@@ -33,12 +33,13 @@ class FillCommand implements Command {
   }
 
   undo(state: EditorStoreState): void {
-    if (this.isIndexed && this.beforeIndexed) {
-      state.setDocument({ ...state.document, pixels: new Uint8Array(this.beforeIndexed) })
+    const document = state.document
+    if (this.isIndexed && document.mode === 'indexed8' && this.beforeIndexed) {
+      state.setDocument({ ...document, pixels: new Uint8Array(this.beforeIndexed) })
       return
     }
-    if (!this.isIndexed && this.beforeRgba) {
-      state.setDocument({ ...state.document, pixels: new Uint32Array(this.beforeRgba) })
+    if (!this.isIndexed && document.mode === 'rgba32' && this.beforeRgba) {
+      state.setDocument({ ...document, pixels: new Uint32Array(this.beforeRgba) })
     }
   }
 }
@@ -53,7 +54,17 @@ export class FillTool implements Tool {
     executeCommand(command, { skipDo: true })
   }
 
-  onPointerMove(_state: EditorStoreState, _x: number, _y: number, _evt: PointerEvent): void {}
+  onPointerMove(_state: EditorStoreState, _x: number, _y: number, _evt: PointerEvent): void {
+    void _state
+    void _x
+    void _y
+    void _evt
+  }
 
-  onPointerUp(_state: EditorStoreState, _x: number, _y: number, _evt: PointerEvent): void {}
+  onPointerUp(_state: EditorStoreState, _x: number, _y: number, _evt: PointerEvent): void {
+    void _state
+    void _x
+    void _y
+    void _evt
+  }
 }

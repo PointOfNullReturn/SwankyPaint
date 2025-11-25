@@ -5,6 +5,7 @@ import { ClearDocumentCommand } from '../ClearDocumentCommand'
 import { ImportIFFCommand } from '../ImportIFFCommand'
 import { resetEditorStore, useEditorStore } from '../../store'
 import { PaletteChangeCommand } from '../PaletteChangeCommand'
+import type { ZoomLevel } from '../../documentTypes'
 
 const getStore = () => useEditorStore.getState()
 
@@ -25,10 +26,15 @@ describe('command execution', () => {
   })
 
   it('undoes and redoes commands', () => {
-    getStore().setDocument((doc) => ({
-      ...doc,
-      pixels: new Uint8Array(doc.pixels.map(() => 5)),
-    }))
+    getStore().setDocument((doc) => {
+      if (doc.mode !== 'indexed8') {
+        return doc
+      }
+      return {
+        ...doc,
+        pixels: new Uint8Array(doc.pixels.map(() => 5)),
+      }
+    })
 
     const command = new ClearDocumentCommand(getStore().document)
     executeCommand(command)
@@ -50,6 +56,9 @@ describe('command execution', () => {
 describe('ImportIFFCommand', () => {
   it('replaces document and supports undo/redo', () => {
     const state = getStore()
+    if (state.document.mode !== 'indexed8') {
+      throw new Error('Expected indexed document for import test')
+    }
     const next = {
       document: {
         mode: 'indexed8' as const,
@@ -59,7 +68,7 @@ describe('ImportIFFCommand', () => {
         palette: state.document.palette.map((c) => ({ ...c })),
         cycles: [],
       },
-      view: { ...state.view, zoom: 2 },
+      view: { ...state.view, zoom: 2 as ZoomLevel },
       palette: state.palette,
     }
     const command = new ImportIFFCommand(state, next)

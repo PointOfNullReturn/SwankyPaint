@@ -1,5 +1,3 @@
-import { Fragment } from 'react'
-
 import { useEditorStore } from '../../state/store'
 
 import '../../styles/layout/Toolbar.css'
@@ -24,7 +22,9 @@ export const Toolbar = () => {
           type="button"
           aria-pressed={activeTool === id}
           className={`toolbar-button${activeTool === id ? ' is-active' : ''}`}
-          onClick={() => setTool(id)}
+          onClick={() => {
+            setTool(id)
+          }}
           title={`${label} (${shortcut})`}
         >
           <Icon />

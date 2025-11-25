@@ -35,16 +35,14 @@ describe('exportPng', () => {
       width: 0,
       height: 0,
       getContext: vi.fn().mockReturnValue({ putImageData: vi.fn() }),
-      toBlob: vi.fn((cb) => cb(new Blob(['png']))),
+      toBlob: vi.fn((cb: BlobCallback) => {
+        cb(new Blob(['png']))
+      }),
     }
     const anchorMock = {
       click: vi.fn(),
-      set href(value: string) {
-        this._href = value
-      },
-      set download(value: string) {
-        this._download = value
-      },
+      href: '',
+      download: '',
     }
     const createElementSpy = vi
       .spyOn(document, 'createElement')

@@ -42,15 +42,16 @@ class StrokeCommand implements Command {
   }
 
   do(state: EditorStoreState): void {
+    const document = state.document
     if (this.afterIndexed || this.afterRgba) {
-      if (this.isIndexed && this.afterIndexed) {
-        state.setDocument({ ...state.document, pixels: new Uint8Array(this.afterIndexed) })
-      } else if (!this.isIndexed && this.afterRgba) {
-        state.setDocument({ ...state.document, pixels: new Uint32Array(this.afterRgba) })
+      if (this.isIndexed && document.mode === 'indexed8' && this.afterIndexed) {
+        state.setDocument({ ...document, pixels: new Uint8Array(this.afterIndexed) })
+      } else if (!this.isIndexed && document.mode === 'rgba32' && this.afterRgba) {
+        state.setDocument({ ...document, pixels: new Uint32Array(this.afterRgba) })
       }
       return
     }
-    const doc = state.document
+    const doc = document
     if (this.coordinates.length === 0) return
     let prev = this.coordinates[0]
     drawLine(doc, prev[0], prev[1], prev[0], prev[1], this.value)
@@ -62,12 +63,13 @@ class StrokeCommand implements Command {
   }
 
   undo(state: EditorStoreState): void {
-    if (this.isIndexed && this.beforeIndexed) {
-      state.setDocument({ ...state.document, pixels: new Uint8Array(this.beforeIndexed) })
+    const document = state.document
+    if (this.isIndexed && document.mode === 'indexed8' && this.beforeIndexed) {
+      state.setDocument({ ...document, pixels: new Uint8Array(this.beforeIndexed) })
       return
     }
-    if (!this.isIndexed && this.beforeRgba) {
-      state.setDocument({ ...state.document, pixels: new Uint32Array(this.beforeRgba) })
+    if (!this.isIndexed && document.mode === 'rgba32' && this.beforeRgba) {
+      state.setDocument({ ...document, pixels: new Uint32Array(this.beforeRgba) })
     }
   }
 }
@@ -94,6 +96,7 @@ export class PencilTool implements Tool {
   }
 
   onPointerUp(state: EditorStoreState, x: number, y: number, evt: PointerEvent): void {
+    void evt
     if (!this.activeCommand) return
     this.activeCommand.addPoint([x, y])
     this.activeCommand.captureAfter(state.document)

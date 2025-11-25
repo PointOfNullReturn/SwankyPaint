@@ -2,7 +2,11 @@ import type { Tool } from '../Tool'
 import type { EditorStoreState } from '../../state/store'
 import { isSecondaryButton } from './colorSelection'
 
-const samplePixelValue = (state: EditorStoreState['document'], x: number, y: number): number | null => {
+const samplePixelValue = (
+  state: EditorStoreState['document'],
+  x: number,
+  y: number,
+): number | null => {
   if (x < 0 || y < 0 || x >= state.width || y >= state.height) {
     return null
   }
@@ -28,7 +32,7 @@ export class PickerTool implements Tool {
     }
   }
 
-  onPointerMove(_state: EditorStoreState, _x: number, _y: number, _evt: PointerEvent): void {}
+  onPointerMove(): void {}
 
-  onPointerUp(_state: EditorStoreState, _x: number, _y: number, _evt: PointerEvent): void {}
+  onPointerUp(): void {}
 }

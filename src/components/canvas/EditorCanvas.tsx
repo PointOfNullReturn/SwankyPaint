@@ -62,7 +62,9 @@ export const EditorCanvas = () => {
       },
     })
     dispatcher.bind()
-    return () => dispatcher.dispose()
+    return () => {
+      dispatcher.dispose()
+    }
   }, [])
 
   return (

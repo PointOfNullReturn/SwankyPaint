@@ -4,7 +4,7 @@ const PRIMARY_BUTTON = 0
 const SECONDARY_BUTTON = 2
 
 const normalizeButton = (evt: PointerEvent): number => {
-  if (evt.button != null && evt.button !== -1) {
+  if (evt.button !== -1) {
     return evt.button
   }
   if (typeof evt.buttons === 'number') {

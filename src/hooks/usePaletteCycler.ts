@@ -29,7 +29,7 @@ const rotateRangeInPlace = (
 }
 
 const getCycleInterval = (cycle: CRNGRange): number => {
-  const rate = Math.max(0, cycle.rate ?? 0)
+  const rate = Math.max(0, cycle.rate)
   if (rate <= 0) {
     return DEFAULT_INTERVAL_MS
   }
@@ -62,29 +62,26 @@ export const usePaletteCycler = () => {
       const delta = timestamp - previousTimestamp
       previousTimestamp = timestamp
       const paletteClone = state.palette.colors.map((color) => ({ ...color }))
-      let dirty = false
       const nextKeys = new Set<string>()
-      activeCycles.forEach((cycle, index) => {
-        const key = `${cycle.low}-${cycle.high}-${index}`
+      const rotated = activeCycles.some((cycle, index) => {
+        const key = `${String(cycle.low)}-${String(cycle.high)}-${String(index)}`
         nextKeys.add(key)
         const interval = getCycleInterval(cycle)
         const carry = (accumulators.get(key) ?? 0) + delta
         if (carry < interval) {
           accumulators.set(key, carry)
-          return
+          return false
         }
         const steps = Math.max(1, Math.floor(carry / interval))
         accumulators.set(key, carry - steps * interval)
-        if (rotateRangeInPlace(paletteClone, cycle.low, cycle.high, steps)) {
-          dirty = true
-        }
+        return rotateRangeInPlace(paletteClone, cycle.low, cycle.high, steps)
       })
       for (const key of accumulators.keys()) {
         if (!nextKeys.has(key)) {
           accumulators.delete(key)
         }
       }
-      if (dirty) {
+      if (rotated) {
         state.setPaletteColors(paletteClone)
       }
       rafId = requestAnimationFrame(tick)

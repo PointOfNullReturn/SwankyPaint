@@ -66,7 +66,13 @@ describe('EditorCanvas', () => {
         pointerId: 1,
       })
       window.dispatchEvent(
-        new PointerEvent('pointerup', { clientX: 0, clientY: 0, button: 0, buttons: 0, pointerId: 1 }),
+        new PointerEvent('pointerup', {
+          clientX: 0,
+          clientY: 0,
+          button: 0,
+          buttons: 0,
+          pointerId: 1,
+        }),
       )
     })
     const state = getState()

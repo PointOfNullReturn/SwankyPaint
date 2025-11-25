@@ -1,20 +1,26 @@
 import type { CommandLike, HistoryState } from './documentTypes'
 
-export const pushUndo = (history: HistoryState, command: CommandLike): HistoryState => {
+export const pushUndo = <T extends CommandLike>(
+  history: HistoryState<T>,
+  command: T,
+): HistoryState<T> => {
   const undoStack = [...history.undoStack, command]
   const overflow = undoStack.length - history.limit
   const trimmed = overflow > 0 ? undoStack.slice(overflow) : undoStack
   return { ...history, undoStack: trimmed }
 }
 
-export const pushRedo = (history: HistoryState, command: CommandLike): HistoryState => ({
+export const pushRedo = <T extends CommandLike>(
+  history: HistoryState<T>,
+  command: T,
+): HistoryState<T> => ({
   ...history,
   redoStack: [...history.redoStack, command],
 })
 
-export const popUndo = (
-  history: HistoryState,
-): { command?: CommandLike; history: HistoryState } => {
+export const popUndo = <T extends CommandLike>(
+  history: HistoryState<T>,
+): { command?: T; history: HistoryState<T> } => {
   const undoStack = history.undoStack
   if (!undoStack.length) {
     return { history }
@@ -26,9 +32,9 @@ export const popUndo = (
   }
 }
 
-export const popRedo = (
-  history: HistoryState,
-): { command?: CommandLike; history: HistoryState } => {
+export const popRedo = <T extends CommandLike>(
+  history: HistoryState<T>,
+): { command?: T; history: HistoryState<T> } => {
   const redoStack = history.redoStack
   if (!redoStack.length) {
     return { history }
@@ -40,10 +46,14 @@ export const popRedo = (
   }
 }
 
-export const clearRedoStack = (history: HistoryState): HistoryState => ({
+export const clearRedoStack = <T extends CommandLike>(
+  history: HistoryState<T>,
+): HistoryState<T> => ({
   ...history,
   redoStack: [],
 })
 
-export const canUndo = (history: HistoryState): boolean => history.undoStack.length > 0
-export const canRedo = (history: HistoryState): boolean => history.redoStack.length > 0
+export const canUndo = <T extends CommandLike>(history: HistoryState<T>): boolean =>
+  history.undoStack.length > 0
+export const canRedo = <T extends CommandLike>(history: HistoryState<T>): boolean =>
+  history.redoStack.length > 0

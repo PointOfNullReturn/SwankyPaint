@@ -39,8 +39,11 @@ export class LoadProjectCommand implements Command {
   private readonly previousView: ViewState
   private readonly previousPalette: PaletteState
 
-  constructor(current: EditorStoreState, next: { document: DocumentState; view: ViewState; palette: PaletteState }) {
-    this.id = `load-${Date.now()}`
+  constructor(
+    current: EditorStoreState,
+    next: { document: DocumentState; view: ViewState; palette: PaletteState },
+  ) {
+    this.id = `load-${String(Date.now())}`
     this.createdAt = Date.now()
     this.nextDocument = cloneDocument(next.document)
     this.nextView = { ...next.view }
@@ -58,7 +61,12 @@ export class LoadProjectCommand implements Command {
     this.applyState(state, this.previousDocument, this.previousView, this.previousPalette)
   }
 
-  private applyState(state: EditorStoreState, document: DocumentState, view: ViewState, palette: PaletteState) {
+  private applyState(
+    state: EditorStoreState,
+    document: DocumentState,
+    view: ViewState,
+    palette: PaletteState,
+  ) {
     state.setDocument(cloneDocument(document))
     state.updateView(() => ({ ...view }))
     state.setPaletteColors(palette.colors.map((color) => ({ ...color })))

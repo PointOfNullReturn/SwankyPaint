@@ -50,8 +50,8 @@ export const StatusBar = () => {
       </div>
       <div className="status-bar__item" aria-live="polite">
         <span className="status-label">Pos</span>
-        <span>{`X: ${Math.round(x)}`}</span>
-        <span>{`Y: ${Math.round(y)}`}</span>
+        <span>{`X: ${String(Math.round(x))}`}</span>
+        <span>{`Y: ${String(Math.round(y))}`}</span>
       </div>
       <div className="status-bar__item" aria-live="polite">
         <span className="status-label">Undo</span>

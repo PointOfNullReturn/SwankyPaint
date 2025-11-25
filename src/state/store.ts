@@ -37,7 +37,7 @@ const sanitizeColor = (color: PaletteColor): PaletteColor => ({
   r: clampChannel(color.r),
   g: clampChannel(color.g),
   b: clampChannel(color.b),
-  a: clampChannel(color.a ?? 255),
+  a: clampChannel(color.a),
 })
 
 export function createDefaultPalette(length = DEFAULT_PALETTE_LENGTH): PaletteColor[] {
@@ -248,7 +248,8 @@ export const useEditorStore = create<StoreState>()(
     },
     setCycleAnimationEnabled: (enabled) => {
       set((state) => {
-        const nextValue = typeof enabled === 'function' ? enabled(state.view.cycleAnimationEnabled) : enabled
+        const nextValue =
+          typeof enabled === 'function' ? enabled(state.view.cycleAnimationEnabled) : enabled
         return {
           view: {
             ...state.view,
@@ -266,7 +267,9 @@ export const useEditorStore = create<StoreState>()(
       }))
     },
     setPaletteColors: (colors) => {
-      set((state) => updatePaletteState(state.palette, state.document, (palette) => ({ ...palette, colors })))
+      set((state) =>
+        updatePaletteState(state.palette, state.document, (palette) => ({ ...palette, colors })),
+      )
     },
     updatePaletteColor: (index, color) => {
       set((state) =>
@@ -290,9 +293,13 @@ export const useEditorStore = create<StoreState>()(
           const colors = palette.colors.slice()
           colors.splice(insertAt, 0, sanitizeColor(color))
           const foregroundIndex =
-            palette.foregroundIndex >= insertAt ? palette.foregroundIndex + 1 : palette.foregroundIndex
+            palette.foregroundIndex >= insertAt
+              ? palette.foregroundIndex + 1
+              : palette.foregroundIndex
           const backgroundIndex =
-            palette.backgroundIndex >= insertAt ? palette.backgroundIndex + 1 : palette.backgroundIndex
+            palette.backgroundIndex >= insertAt
+              ? palette.backgroundIndex + 1
+              : palette.backgroundIndex
           return { ...palette, colors, foregroundIndex, backgroundIndex }
         }),
       )

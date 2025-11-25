@@ -68,7 +68,7 @@ export const decodeBitplanes = (header: BitmapHeader, body: Uint8Array): Uint8Ar
   const height = header.height
   const planes = header.bitplanes
   if (planes < 1 || planes > 8) {
-    throw new Error(`Unsupported bitplane count ${planes}`)
+    throw new Error(`Unsupported bitplane count ${String(planes)}`)
   }
   const rowBytes = ((width + 15) >> 4) << 1
   const output = new Uint8Array(width * height)
@@ -103,5 +103,5 @@ export const decodeBitplanes = (header: BitmapHeader, body: Uint8Array): Uint8Ar
     return output
   }
 
-  throw new Error(`Unsupported ILBM compression ${header.compression}`)
+  throw new Error(`Unsupported ILBM compression ${String(header.compression)}`)
 }

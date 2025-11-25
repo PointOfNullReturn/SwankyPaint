@@ -1,4 +1,10 @@
-import type { CRNGRange, DocumentState, PaletteColor, PaletteState, ViewState } from '../state/documentTypes'
+import type {
+  CRNGRange,
+  DocumentState,
+  PaletteColor,
+  PaletteState,
+  ViewState,
+} from '../state/documentTypes'
 
 export const PROJECT_VERSION = 1
 
@@ -21,8 +27,14 @@ export interface ProjectSnapshot {
   }
 }
 
-const encoder = typeof btoa === 'function' ? btoa : (data: string) => Buffer.from(data, 'binary').toString('base64')
-const decoder = typeof atob === 'function' ? atob : (data: string) => Buffer.from(data, 'base64').toString('binary')
+const encoder =
+  typeof btoa === 'function'
+    ? btoa
+    : (data: string) => Buffer.from(data, 'binary').toString('base64')
+const decoder =
+  typeof atob === 'function'
+    ? atob
+    : (data: string) => Buffer.from(data, 'base64').toString('binary')
 
 const toBinaryString = (bytes: Uint8Array): string => {
   let result = ''

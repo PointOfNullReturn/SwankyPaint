@@ -8,7 +8,7 @@ const clampIndex = (value: number, max: number): number => Math.max(0, Math.min(
 
 const validateSnapshot = (snapshot: ProjectSnapshot): void => {
   if (snapshot.version !== PROJECT_VERSION) {
-    throw new Error(`Unsupported project version ${snapshot.version}`)
+    throw new Error(`Unsupported project version ${String(snapshot.version)}`)
   }
   if (snapshot.document.width <= 0 || snapshot.document.height <= 0) {
     throw new Error('Document dimensions must be positive')
@@ -50,19 +50,25 @@ const createDocument = (snapshot: ProjectSnapshot['document']): DocumentState =>
 
 const createPaletteState = (snapshot: ProjectSnapshot, document: DocumentState): PaletteState => {
   const base = createDefaultPaletteState()
-  const colors = snapshot.palette.colors ?? (document.mode === 'indexed8' ? document.palette : base.colors)
+  const colors =
+    snapshot.palette.colors ?? (document.mode === 'indexed8' ? document.palette : base.colors)
+  const documentCycles =
+    document.mode === 'indexed8'
+      ? (document.cycles?.map((cycle) => ({ ...cycle })) ?? [])
+      : base.cycles
+  const paletteCycles = snapshot.palette.cycles?.map((cycle) => ({ ...cycle })) ?? documentCycles
   const palette: PaletteState = {
     colors: colors.map((color) => ({ ...color })),
     foregroundIndex: clampIndex(snapshot.palette.foregroundIndex, colors.length - 1),
     backgroundIndex: clampIndex(snapshot.palette.backgroundIndex, colors.length - 1),
-    cycles: snapshot.palette.cycles?.map((cycle) => ({ ...cycle })) ?? document.mode === 'indexed8'
-      ? document.cycles
-      : base.cycles,
+    cycles: paletteCycles,
   }
   return palette
 }
 
-export const buildStateFromSnapshot = (snapshot: ProjectSnapshot): {
+export const buildStateFromSnapshot = (
+  snapshot: ProjectSnapshot,
+): {
   document: DocumentState
   view: ViewState
   palette: PaletteState

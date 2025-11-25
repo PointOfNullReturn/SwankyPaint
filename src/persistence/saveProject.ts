@@ -10,10 +10,9 @@ export const saveProject = (
   view: ViewState,
   palette: PaletteState,
 ): ProjectSnapshot => {
-  const pixels =
-    document.mode === 'indexed8'
-      ? encodeBase64(new Uint8Array(document.pixels))
-      : encodeBase64(new Uint8Array(document.pixels.buffer))
+  const pixelBytes =
+    document.mode === 'indexed8' ? document.pixels : new Uint8Array(document.pixels.buffer)
+  const pixels = encodeBase64(pixelBytes.slice().buffer)
 
   return {
     version: PROJECT_VERSION,
@@ -22,8 +21,10 @@ export const saveProject = (
       width: document.width,
       height: document.height,
       pixels,
-      palette: document.mode === 'indexed8' ? document.palette.map((color) => ({ ...color })) : undefined,
-      cycles: document.mode === 'indexed8' ? document.cycles?.map((cycle) => ({ ...cycle })) : undefined,
+      palette:
+        document.mode === 'indexed8' ? document.palette.map((color) => ({ ...color })) : undefined,
+      cycles:
+        document.mode === 'indexed8' ? document.cycles?.map((cycle) => ({ ...cycle })) : undefined,
     },
     view: { ...view },
     palette: {

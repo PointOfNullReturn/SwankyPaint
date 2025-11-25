@@ -5,8 +5,8 @@
 
 export type ImageMode = 'indexed8' | 'rgba32'
 
-export type ZoomLevel = 1 | 2 | 4 | 8 | 16 | 32
-export const ZOOM_LEVELS: readonly ZoomLevel[] = [1, 2, 4, 8, 16, 32]
+export const ZOOM_LEVELS = [1, 2, 4, 8, 16, 32] as const
+export type ZoomLevel = (typeof ZOOM_LEVELS)[number]
 export const MIN_DOCUMENT_DIMENSION = 32
 export const MAX_DOCUMENT_DIMENSION = 4096
 export const MAX_PALETTE_SIZE = 256
@@ -71,7 +71,7 @@ export interface ToolState {
   activeToolId: string
 }
 
-export interface HistoryState<CommandShape = CommandLike> {
+export interface HistoryState<CommandShape extends CommandLike = CommandLike> {
   undoStack: CommandShape[]
   redoStack: CommandShape[]
   limit: number
@@ -87,8 +87,10 @@ export interface EditorState {
 }
 
 export interface CommandLike {
-  do: () => void
-  undo: () => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  do: (...args: any[]) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  undo: (...args: any[]) => void
 }
 
 export const canUndo = (history: HistoryState): boolean => history.undoStack.length > 0
@@ -99,7 +101,14 @@ export const canRedo = (history: HistoryState): boolean => history.redoStack.len
 // ---------------------------------------------------------------------------
 
 type Expect<T extends true> = T
-type Equal<A, B> = A extends B ? (B extends A ? true : false) : false
+/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
+type Equal<A, B> =
+  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2
+    ? (<T>() => T extends B ? 1 : 2) extends <T>() => T extends A ? 1 : 2
+      ? true
+      : false
+    : false
+/* eslint-enable @typescript-eslint/no-unnecessary-type-parameters */
 
 export type __DocumentTypeAssertions = [
   Expect<Equal<(typeof ZOOM_LEVELS)[number], ZoomLevel>>,

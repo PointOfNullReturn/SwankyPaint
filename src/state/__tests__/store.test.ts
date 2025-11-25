@@ -24,6 +24,9 @@ describe('useEditorStore defaults', () => {
     expect(state.document.mode).toBe('indexed8')
     expect(state.document.width).toBe(320)
     expect(state.document.height).toBe(200)
+    if (state.document.mode !== 'indexed8') {
+      throw new Error('Expected default document to be indexed')
+    }
     expect(state.document.palette).toHaveLength(32)
     expect(state.palette.colors).toHaveLength(32)
     expect(state.palette.foregroundIndex).toBeGreaterThanOrEqual(0)
@@ -66,7 +69,11 @@ describe('document actions', () => {
     }
     getState().setDocument(nextDoc)
     expect(getState().palette.colors).toHaveLength(4)
-    expect(getState().document.palette).toEqual(getState().palette.colors)
+    const doc = getState().document
+    if (doc.mode !== 'indexed8') {
+      throw new Error('Expected document to remain indexed')
+    }
+    expect(doc.palette).toEqual(getState().palette.colors)
   })
 })
 
@@ -147,7 +154,11 @@ describe('palette actions', () => {
     const colors = createDefaultPalette(4)
     getState().setPaletteColors(colors)
     expect(getState().palette.colors).toHaveLength(4)
-    expect(getState().document.palette).toEqual(getState().palette.colors)
+    const doc = getState().document
+    if (doc.mode !== 'indexed8') {
+      throw new Error('Expected document to remain indexed')
+    }
+    expect(doc.palette).toEqual(getState().palette.colors)
   })
 
   it('inserts and removes colors adjusting FG/BG indices', () => {
@@ -164,8 +175,9 @@ describe('palette actions', () => {
     const cycles = [{ rate: 1, low: 0, high: 2, active: true }]
     getState().setPaletteCycles(cycles)
     expect(getState().palette.cycles).toEqual(cycles)
-    if (getState().document.mode === 'indexed8') {
-      expect(getState().document.cycles).toEqual(cycles)
+    const doc = getState().document
+    if (doc.mode === 'indexed8') {
+      expect(doc.cycles).toEqual(cycles)
     }
   })
 })

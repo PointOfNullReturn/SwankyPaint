@@ -5,10 +5,11 @@ import type { PaletteColor } from '../../state/documentTypes'
 
 import '../../styles/palette/PaletteView.css'
 
-const toCssColor = (color: PaletteColor): string => `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a / 255})`
+const toCssColor = (color: PaletteColor): string =>
+  `rgba(${String(color.r)}, ${String(color.g)}, ${String(color.b)}, ${String(color.a / 255)})`
 
 const getAriaLabel = (index: number, color: PaletteColor): string =>
-  `Color ${index}: r ${color.r}, g ${color.g}, b ${color.b}, a ${color.a}`
+  `Color ${String(index)}: r ${String(color.r)}, g ${String(color.g)}, b ${String(color.b)}, a ${String(color.a)}`
 
 const clampIndex = (index: number, max: number): number => {
   if (max < 0) return 0
@@ -76,8 +77,13 @@ export const PaletteView = memo(() => {
                 case 'ArrowUp':
                 case 'ArrowDown': {
                   event.preventDefault()
-                  const nextIndex = focusSwatch(index, event.key.replace('Arrow', '').toLowerCase() as never)
-                  const element = event.currentTarget.parentElement?.children[nextIndex] as HTMLButtonElement | undefined
+                  const nextIndex = focusSwatch(
+                    index,
+                    event.key.replace('Arrow', '').toLowerCase() as never,
+                  )
+                  const element = event.currentTarget.parentElement?.children[nextIndex] as
+                    | HTMLButtonElement
+                    | undefined
                   element?.focus()
                   break
                 }

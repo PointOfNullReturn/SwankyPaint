@@ -25,7 +25,7 @@ const createTestILBM = ({
   const defaultBody = new Uint8Array(rowBytes * bitplanes * height)
   defaultBody.set([0b10000000, 0, 0b01000000, 0])
   const body = bodyData ?? defaultBody
-  const chunks = [
+  const chunks: Array<[string, Uint8Array]> = [
     ['BMHD', new Uint8Array(bmhd)],
     ['CMAP', cmap],
     ['BODY', body],

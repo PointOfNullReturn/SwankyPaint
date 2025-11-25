@@ -1,7 +1,7 @@
 import type { DocumentState } from '../state/documentTypes'
 import { useEditorStore } from '../state/store'
 
-const documentToRgba = (doc: DocumentState): Uint8ClampedArray => {
+const documentToRgba = (doc: DocumentState): Uint8ClampedArray<ArrayBuffer> => {
   const totalPixels = doc.width * doc.height
   const buffer = new Uint8ClampedArray(totalPixels * 4)
   if (doc.mode === 'rgba32') {
@@ -12,10 +12,10 @@ const documentToRgba = (doc: DocumentState): Uint8ClampedArray => {
     const paletteIndex = doc.pixels[i]
     const color = doc.palette[paletteIndex]
     const offset = i * 4
-    buffer[offset] = color?.r ?? 0
-    buffer[offset + 1] = color?.g ?? 0
-    buffer[offset + 2] = color?.b ?? 0
-    buffer[offset + 3] = color?.a ?? 255
+    buffer[offset] = color.r
+    buffer[offset + 1] = color.g
+    buffer[offset + 2] = color.b
+    buffer[offset + 3] = color.a
   }
   return buffer
 }
