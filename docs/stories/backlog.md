@@ -1,6 +1,6 @@
 # Ordered Backlog
 
-Work items must progress sequentially unless explicit approvals allow overlap. Epics and stories share numbering (Epic.Story).
+Work items must progress sequentially unless explicit approvals allow overlap. Epics and stories share numbering (Epic.Story). This backlog currently tracks the 0.1.0-Alpha milestone; the detailed write-ups live in `docs/stories/0.1.0-Alpha-Stories/` alongside the matching specs in `docs/epics/0.1.0-Alpha-Specs/`.
 
 1. **01.01** – Scaffold Vite + React + TypeScript
 2. **01.02** – Configure ESLint/Prettier & Formatting Hooks

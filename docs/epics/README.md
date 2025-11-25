@@ -1,6 +1,15 @@
 # Ordered Epics
 
-The NeoPrism MVP roadmap is split into eight sequential epics. Each epic contains its own spec plus detailed stories (`docs/stories/xx-*.md`) with matching numbering.
+Epics are grouped by release so we can freeze specs per milestone. Each release folder under `docs/epics/` mirrors the numbering below and has matching story files under `docs/stories/<release>-Stories/`.
+
+Current releases:
+
+- `docs/epics/0.1.0-Alpha-Specs/` – MVP foundation (Epics 01–08)
+- `docs/epics/0.2.0-Alpha-Specs/` – _reserved_ (populate as planning progresses)
+
+When a new release spins up, create the `<version>-Specs` and `<version>-Stories` folders and move/copy the relevant specs so contributors know where to look. `docs/epics/README.md` should always describe the latest map.
+
+## Epic Ordering (per release)
 
 1. **Epic 01 – Project Foundation & Tooling**
 2. **Epic 02 – Architecture & Editor State**
@@ -22,4 +31,4 @@ Work should proceed in order unless a later epic explicitly depends on an earlie
 - **Epic 07** relies on **Epics 02–06** to wire UI controls into real store actions (menubar commands for import/export, toolbar for tools, status bar for palette/pointer data).
 - **Epic 08** assumes all prior epics are feature-complete; tests and QA artifacts reference functionality implemented earlier. Certain suites (e.g., flood fill) technically target Epic 04, so they can be started earlier if capacity exists.
 
-When planning iterations, verify upstream epics are “dev complete” enough to unblock downstream stories. Partial overlaps are possible (e.g., start Epic 05 once tools and renderer are stable) but avoid skipping prerequisites listed above.
+When planning iterations, verify upstream epics are “dev complete” enough to unblock downstream stories. Partial overlaps are possible (e.g., start Epic 05 once tools and renderer are stable) but avoid skipping prerequisites listed above. Always confirm you’re reading the spec from the correct release folder.

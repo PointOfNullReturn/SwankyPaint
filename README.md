@@ -1,6 +1,6 @@
 # NeoPrism Frontend Scaffold
 
-Modern Deluxe Paint clone targeting React 19 + TypeScript + Vite. This repo already follows the architecture described in `docs/Alpha Master Specs/NeoPrism Project Spec.md` and the ordered epics under `docs/epics/`. Each story in `docs/stories/` builds on this foundation.
+Modern Deluxe Paint clone targeting React 19 + TypeScript + Vite. This repo already follows the architecture described in `docs/Alpha Master Specs/NeoPrism Project Spec.md` and the ordered epics grouped by release under `docs/epics/` (for example, `docs/epics/0.1.0-Alpha-Specs/`). Story write-ups live beside their respective release folders under `docs/stories/` (e.g., `docs/stories/0.1.0-Alpha-Stories/`), so grab the one matching the milestone you’re working on.
 
 ## Project Structure
 
@@ -17,7 +17,7 @@ src/
   styles/       // CSS modules/global styles
 ```
 
-Docs live under `docs/`, split into `epics/` (ordered specs) and `stories/` (detailed tickets). Follow `docs/stories/backlog.md` when prioritizing work; master specs live in `docs/Alpha Master Specs/`.
+Docs live under `docs/`, split into release-specific `epics/<version>-Specs/` folders (high-level specs) and `stories/<version>-Stories/` folders (detailed tickets). Follow `docs/stories/backlog.md` when prioritizing work; master specs live in `docs/Alpha Master Specs/`.
 
 ## Commands
 
@@ -34,8 +34,8 @@ Before committing, run `npm run prepare` once locally to install Husky so `npx l
 
 ## Specs & Roadmap
 
-- [Epics overview](docs/epics/README.md)
-- [Story backlog](docs/stories/backlog.md)
+- [Epics overview + release map](docs/epics/README.md)
+- [Story backlog (latest)](docs/stories/backlog.md)
 - [Master specs](<docs/Alpha\ Master\ Specs/NeoPrism\ Project\ Spec.md>) _(DPaint MVP details)_
 
 ## Testing Strategy
