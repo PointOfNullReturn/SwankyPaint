@@ -1,9 +1,9 @@
-name: Build and Deploy NeoPrism (Tag Releases)
+name: Build and Deploy NeoPrism
 
 on:
   push:
-    tags:
-      - '*' # Runs on ANY tag: v1.0.0, 0.1.0-alpha.1, etc.
+    branches:
+      - main
 
 permissions:
   contents: read
