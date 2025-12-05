@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { executeCommand } from '../../state/commands/Command'
 import {
   PaletteChangeCommand,
@@ -26,14 +24,10 @@ const createPaletteCommand = (
 
 export const PaletteEditor = () => {
   const palette = usePalette()
-  const [selectedIndexRaw, setSelectedIndexRaw] = useState(palette.foregroundIndex)
   const setForegroundIndex = useEditorStore((state) => state.setForegroundIndex)
 
-  // Clamp selected index to valid range
-  const selectedIndex = Math.min(selectedIndexRaw, palette.colors.length - 1)
-  const setSelectedIndex = (value: number | ((prev: number) => number)) => {
-    setSelectedIndexRaw(value)
-  }
+  // Use foreground index from palette, clamped to valid range
+  const selectedIndex = Math.min(palette.foregroundIndex, palette.colors.length - 1)
 
   const selectedColor = palette.colors[selectedIndex] ?? palette.colors[0]
 
@@ -52,7 +46,6 @@ export const PaletteEditor = () => {
     ]
     executeCommand(createPaletteCommand(operations, 'Insert color'))
     const nextIndex = Math.min(insertIndex, palette.colors.length)
-    setSelectedIndex(nextIndex)
     setForegroundIndex(nextIndex)
   }
 
@@ -60,7 +53,6 @@ export const PaletteEditor = () => {
     if (palette.colors.length <= MIN_COLORS) return
     executeCommand(createPaletteCommand([{ type: 'remove', index: selectedIndex }], 'Remove color'))
     const nextIndex = Math.max(0, Math.min(selectedIndex, palette.colors.length - 2))
-    setSelectedIndex(nextIndex)
     setForegroundIndex(nextIndex)
   }
 
@@ -75,21 +67,7 @@ export const PaletteEditor = () => {
     <div className="palette-editor">
       <header className="palette-editor__header">
         <h2>Palette Editor</h2>
-        <label>
-          <span>Selected Index</span>
-          <select
-            value={selectedIndex}
-            onChange={(event) => {
-              const index = Number(event.target.value)
-              setSelectedIndex(index)
-              setForegroundIndex(index)
-            }}
-          >
-            {palette.colors.map((_, index) => (
-              <option key={index} value={index}>{`#${String(index)}`}</option>
-            ))}
-          </select>
-        </label>
+        <span className="selected-index-display">Color #{selectedIndex}</span>
       </header>
       <div className="channel-controls">
         {channelLabels.map((channel) => (

@@ -16,8 +16,10 @@
   margin-bottom: 1rem;
 }
 
-.palette-editor__header select {
-  margin-left: 0.5rem;
+.selected-index-display {
+  font-size: 0.9rem;
+  color: #a0a0a8;
+  font-weight: 500;
 }
 
 .channel-controls {
