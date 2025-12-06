@@ -1,4 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+
+import '../../styles/components/AboutDialog.css'
 
 interface AboutModalProps {
   open: boolean
@@ -6,29 +8,44 @@ interface AboutModalProps {
 }
 
 export const AboutModal = ({ open, onClose }: AboutModalProps) => {
+  const dialogRef = useRef<HTMLDialogElement>(null)
+
   useEffect(() => {
-    if (!open) return
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose()
+    const dialog = dialogRef.current
+    if (!dialog) return
+
+    if (open) {
+      // Check if showModal is available (for test environments)
+      if (typeof dialog.showModal === 'function') {
+        dialog.showModal()
+      } else {
+        // Fallback for test environments without full dialog support
+        dialog.setAttribute('open', '')
+      }
+    } else {
+      // Check if close is available (for test environments)
+      if (typeof dialog.close === 'function') {
+        dialog.close()
+      } else {
+        // Fallback for test environments
+        dialog.removeAttribute('open')
       }
     }
-    window.addEventListener('keydown', handleKey)
-    return () => {
-      window.removeEventListener('keydown', handleKey)
-    }
-  }, [open, onClose])
-  if (!open) return null
+  }, [open])
+
+  const handleClose = () => {
+    onClose()
+  }
+
   return (
-    <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="About NeoPrism">
-      <div className="modal-content">
-        <h2>About NeoPrism</h2>
-        <p>Version {import.meta.env.VITE_APP_VERSION ?? '0.0.0'}</p>
-        <p>React 19 + Vite 5 prototype.</p>
-        <button type="button" onClick={onClose}>
-          Close
-        </button>
-      </div>
-    </div>
+    <dialog ref={dialogRef} onClose={handleClose} className="about-dialog">
+      <h2>NeoPrism</h2>
+      <p>Version {import.meta.env.VITE_APP_VERSION ?? '0.1.0-alpha'}</p>
+      <p>Using: React 19 + Vite 5 prototype.</p>
+      <p>by Kevin Cox</p>
+      <button type="button" onClick={handleClose}>
+        Close
+      </button>
+    </dialog>
   )
 }

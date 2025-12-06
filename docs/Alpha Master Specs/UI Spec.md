@@ -300,6 +300,69 @@ none — uses Zustand selectors
 
 ---
 
+## 2.8 **Modal Dialogs**
+
+### Standard Implementation Pattern
+
+**All modal dialogs** in NeoPrism use the native HTML `<dialog>` element for consistent behavior and accessibility.
+
+**Benefits:**
+- Native modal behavior with automatic focus trapping
+- Built-in Escape key handling
+- Top layer rendering (no z-index conflicts)
+- Native backdrop with `::backdrop` pseudo-element
+- Better accessibility with built-in ARIA semantics
+
+**Component Pattern:**
+
+```typescript
+interface ModalProps {
+  open: boolean
+  onClose: () => void
+}
+
+export const ExampleModal = ({ open, onClose }: ModalProps) => {
+  const dialogRef = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    const dialog = dialogRef.current
+    if (!dialog) return
+
+    if (open) {
+      dialog.showModal()
+    } else {
+      dialog.close()
+    }
+  }, [open])
+
+  return (
+    <dialog ref={dialogRef} onClose={onClose} className="example-dialog">
+      {/* Dialog content */}
+    </dialog>
+  )
+}
+```
+
+**Styling Guidelines:**
+- Use `::backdrop` for overlay styling
+- Apply classic Mac dialog aesthetic (beveled borders, shadows)
+- Ensure sufficient padding and readable typography
+- Button styling consistent with app theme
+
+**Implemented Dialogs:**
+- **AboutModal** - Shows version and build information
+  - File: `src/components/menubar/AboutModal.tsx`
+  - Triggered from Help → About NeoPrism
+  - Displays app version and technology stack
+
+**Future Dialogs** (planned):
+- New Document confirmation
+- Export settings
+- Import error messages
+- Preferences/Settings
+
+---
+
 # 3. **UI Interaction Specs**
 
 ## 3.1 Pointer Interaction Model

@@ -45,6 +45,10 @@
 - Visual styling uses classic Mac blue (#4a8fd8) for active/hover states, gradient backgrounds, and beveled borders adapted for dark theme.
 - Menu dividers added to File and View menus to separate logical groups.
 - Disabled states properly styled and functionally disabled at zoom limits.
+- **Native Dialog Implementation**: Refactored `AboutModal` to use native HTML `<dialog>` element instead of DIV-based simulation.
+- Uses `dialog.showModal()` / `dialog.close()` for native modal behavior with automatic focus trapping and Escape key handling.
+- Styled with `::backdrop` pseudo-element for overlay effect.
+- Establishes standard pattern for all future modal dialogs in the application.
 
 ## Story 07.04 – Status Bar & Live Readouts _(Status: ✅ Completed)_
 **Goal:** Display pointer coordinates plus FG/BG data efficiently.

@@ -10,6 +10,8 @@ Assemble the visible React UI per spec (`docs/Alpha Master Specs/NeoPrism Projec
 - Data-driven menu architecture using TypeScript interfaces with reusable components (MenuLabel, MenuItem, MenuDropdown).
 - Toolbar components with icons/shortcuts reflecting active tool state.
 - Status bar displaying pointer coordinates and FG/BG values without triggering full React rerenders.
+- About modal using native HTML `<dialog>` element with proper accessibility and focus management.
+- Standardized modal dialog pattern for all future dialogs using native browser capabilities.
 
 ## Dependencies
 - Epics 01–06 (UI surfaces rely on functioning store, tools, palette, persistence).
