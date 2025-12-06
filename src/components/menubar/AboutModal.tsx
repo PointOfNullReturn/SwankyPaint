@@ -41,8 +41,9 @@ export const AboutModal = ({ open, onClose }: AboutModalProps) => {
     <dialog ref={dialogRef} onClose={handleClose} className="about-dialog">
       <h2>NeoPrism</h2>
       <p>Version {import.meta.env.VITE_APP_VERSION ?? '0.1.0-alpha'}</p>
-      <p>Using: React 19 + Vite 5 prototype.</p>
       <p>by Kevin Cox</p>
+      <p>Copyright © 2025 - 2026</p>
+      <p>Licensed under the GNU General Public License v3.0</p>
       <button type="button" onClick={handleClose}>
         Close
       </button>

@@ -22,7 +22,7 @@
   padding: 4px 12px;
   color: #e7e7ee;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: inherit;
   cursor: default;
   transition: background 0.1s, color 0.1s;
   border-radius: 3px;
@@ -96,7 +96,7 @@
 .menu-item-shortcut {
   font-size: 13px;
   opacity: 0.7;
-  font-family: -apple-system, system-ui, sans-serif;
+  font-family: inherit;
   white-space: nowrap;
   margin-left: 16px;
 }
